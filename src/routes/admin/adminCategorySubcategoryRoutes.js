@@ -10,9 +10,9 @@ const {
 } = require("../../controllers/admin/adminCategoryController");
 
 // Categories
-router.post("/categories", upload.single("image"), createCategory);
-router.put("/categories/:id", upload.single("image"), updateCategory);
-router.delete("/categories/:id", deleteCategory);
+router.post("/", upload.single("image"), createCategory);
+router.put("/:id", upload.single("image"), updateCategory);
+router.delete("/:id", deleteCategory);
 
 // Sub-Categories
 router.post("/subcategories", upload.single("image"), createSubCategory);
