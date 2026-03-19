@@ -12,6 +12,9 @@ const categoryRoutes = require("./routes/admin/adminCategorySubcategoryRoutes");
 const products = require('../src/routes/productRoutes');
 const bannerRoute = require('../src/routes/admin/bannerRoutes');
 const offerRoute = require('../src/routes/admin/offerRoutes')
+const orderRoute = require('../src/routes/orderRoutes')
+const adminOrderRoute = require('../src/routes/admin/adminOrderRoutes')
+const reviewRoute = require('../src/routes/reviewRoutes')
 
 const app = express();
 
@@ -40,13 +43,16 @@ app.get("/", (req, res) => {
 // --- 5. Routes Integration ---
 app.use("/api/auth", authRoutes);
 app.use('/api/products', products);
+app.use('/api/order' ,orderRoute)
 
 // Admin Routes
 // Note: Shobguloi /api/admin use korche, tai order kheyal rakhun
 app.use("/api/admin/products", adminProductRoutes); //products create
 app.use("/api/admin/categories", categoryRoutes); //category create
 app.use("/api/admin/banners", bannerRoute); // Eita ekhon unique
-app.use("/api/admin/offers", offerRoute)
+app.use("/api/admin/offers", offerRoute) //offer create kora
+app.use("/api/admin/order" , adminOrderRoute) //status change kora oder er + all order get kora
+app.use("/api/product/review", reviewRoute) //review post kora
 
 // --- 6. Error Handling ---
 app.use(notFound);
