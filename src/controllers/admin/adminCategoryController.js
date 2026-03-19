@@ -2,6 +2,7 @@ const {
   createCategoryService,
   updateCategoryService,
   deleteCategoryService,
+  getNestedCategoriesService,
 } = require("../../services/admin/adminCategoryService");
 
 const {
@@ -30,6 +31,18 @@ exports.updateCategory = async (req, res, next) => {
     res.json({ message: "Category updated successfully", category });
   } catch (err) {
     next(err);
+  }
+};
+
+exports.getNestedCategories = async (req, res, next) => {
+  try {
+    const categories = await getNestedCategoriesService();
+    res.status(200).json({
+      success: true,
+      data: categories,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 

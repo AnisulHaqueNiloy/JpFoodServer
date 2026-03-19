@@ -6,11 +6,13 @@ const {
   updateCategory, // <-- Eta missing chilo
   deleteCategory,
   createSubCategory,
-  deleteSubCategory, // <-- Etao missing chilo
+  deleteSubCategory,
+  getNestedCategories, // <-- Etao missing chilo
 } = require("../../controllers/admin/adminCategoryController");
 
 // Categories
 router.post("/", upload.single("image"), createCategory);
+router.get("/", upload.single("image"), getNestedCategories);
 router.put("/:id", upload.single("image"), updateCategory);
 router.delete("/:id", deleteCategory);
 

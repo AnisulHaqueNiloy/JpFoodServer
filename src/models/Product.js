@@ -75,14 +75,16 @@ const productSchema = new mongoose.Schema(
 );
 
 // Title theke automatic slug generate korar logic
-productSchema.pre("validate", function (next) {
+productSchema.pre("validate", function () {
+  // next parameter bad din
   if (this.title && !this.slug) {
     this.slug = this.title
       .toLowerCase()
+      .trim()
       .replace(/[^\w ]+/g, "")
       .replace(/ +/g, "-");
   }
-  next();
+  // next() call korar dorkar nai, validate auto sesh hobe
 });
 
 module.exports = mongoose.model("Product", productSchema);

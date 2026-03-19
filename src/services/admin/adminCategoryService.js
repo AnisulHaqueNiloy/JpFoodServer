@@ -50,3 +50,17 @@ exports.deleteCategoryService = async (id) => {
 
   return await Category.findByIdAndDelete(id);
 };
+
+exports.getNestedCategoriesService = async () => {
+  return await Category.aggregate([
+    {
+      $lookup: {
+        from: "subcategories", // Collection name (mongodb-te lowercase + s hoy)
+        localField: "_id",
+        foreignField: "category",
+        as: "subcategories",
+      },
+    },
+    { $sort: { createdAt: -1 } },
+  ]);
+};
