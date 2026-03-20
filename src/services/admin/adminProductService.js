@@ -16,6 +16,15 @@ exports.createProductService = async (productData, files) => {
   return await product.save();
 };
 
+exports.getProductByIdService = async (productId) => {
+  const product = await Product.findById(productId)
+    .populate("category")
+    .populate("subCategory");
+
+  if (!product) throw new Error("Product not found");
+  return product;
+};
+
 // 2. Update Product
 exports.updateProductService = async (productId, updateData, files) => {
   const product = await Product.findById(productId);

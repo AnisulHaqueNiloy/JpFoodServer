@@ -15,6 +15,4 @@ router.get("/", getProducts); // Filtering (Image 3)
 router.get("/featured", getFeatured); // Homepage (Image 2)
 router.get("/:slug", getProductBySlug); // Details (Image 4)
 
-
-
 module.exports = router;
