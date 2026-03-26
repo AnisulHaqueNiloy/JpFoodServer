@@ -3,6 +3,7 @@ const {
   authenticateUser,
   getUserById,
   logoutUser,
+  updateUserProfile
 } = require("../services/authService");
 
 const setTokenCookie = (res, token) => {
@@ -104,4 +105,32 @@ const logout = async (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-module.exports = { registerUser, loginUser, getMe, logout };
+const updateMe = async (req, res, next) => {
+  try {
+    const { name, password } = req.body;
+    let imagePath = req.body.image; // Purono image link jodi thake
+
+    // Jodi Multer noutun file upload kore thake
+    if (req.file) {
+      // Public folder-er path jeta frontend theke access kora jabe
+      imagePath = `/uploads/users/${req.file.filename}`;
+    }
+
+    const updatedData = await updateUserProfile(req.user._id, { 
+      name, 
+      image: imagePath, 
+      password 
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedData,
+    });
+  } catch (error) {
+    res.status(400);
+    next(error);
+  }
+};
+
+module.exports = { registerUser, loginUser, getMe, logout ,updateMe};

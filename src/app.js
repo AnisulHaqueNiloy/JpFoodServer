@@ -24,7 +24,7 @@ const app = express();
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://your-frontend-domain.com"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
     credentials: true,
   }),
 );
@@ -45,10 +45,10 @@ app.get("/", (req, res) => {
 // --- 5. Routes Integration ---
 app.use("/api/auth", authRoutes);
 app.use("/api/products", products);
-app.use("/api/order", orderRoute);
+app.use("/api/order", orderRoute);//order place
 app.use("/api/product/review", reviewRoute); //review post kora
 // Admin Routes
-app.use("/api", userRoute);
+app.use("/api/user", userRoute);//all user and my order
 app.use("/api/admin/products", adminProductRoutes); //products create
 app.use("/api/admin/categories", categoryRoutes); //category create
 app.use("/api/admin/banners", bannerRoute); // Eita ekhon unique

@@ -20,3 +20,9 @@ exports.updateStatusService = async (orderId, status) => {
 exports.deleteOrderService = async (orderId) => {
   return await Order.findByIdAndDelete(orderId);
 };
+
+exports.getOrderDetailsService = async (orderId) => {
+  return await Order.findById(orderId)
+    .populate("user", "name email")
+    .populate("orderItems.product", "name image price"); // Jodi product er details lage
+};

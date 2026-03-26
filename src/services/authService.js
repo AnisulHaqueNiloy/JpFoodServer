@@ -66,4 +66,31 @@ const logoutUser = () => {
   };
 };
 
-module.exports = { registerNewUser, authenticateUser, getUserById, logoutUser };
+const updateUserProfile = async (userId, updateData) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Update fields (Email bad diye)
+  if (updateData.name) user.name = updateData.name;
+  if (updateData.image) user.image = updateData.image;
+
+  // Password update logic
+  if (updateData.password) {
+    user.password = updateData.password;
+  }
+
+  const updatedUser = await user.save();
+
+  return {
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    email: updatedUser.email, // Email change hobena, kintu response-e pathachchi
+    image: updatedUser.image,
+    role: updatedUser.role,
+  };
+};
+
+module.exports = { registerNewUser, authenticateUser, getUserById, logoutUser,updateUserProfile };

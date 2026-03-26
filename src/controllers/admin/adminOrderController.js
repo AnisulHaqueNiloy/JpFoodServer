@@ -51,3 +51,23 @@ exports.deleteOrder = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getOrderDetails = async (req, res, next) => {
+  try {
+    const order = await adminOrderService.getOrderDetailsService(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Order not found" 
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

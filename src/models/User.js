@@ -17,13 +17,19 @@ const userSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-
+// Password match korar logic
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) next();
+// ✅ Fixed Pre-save Middleware
+userSchema.pre('save', async function () {
+  // Jodi password change na hoy, tobe kichu korar dorkar nei
+  if (!this.isModified('password')) {
+    return; // next() soriye return kora hoyeche
+  }
+
+  // Password hash korar logic
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });

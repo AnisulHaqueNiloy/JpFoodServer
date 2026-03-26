@@ -20,6 +20,9 @@ const storage = multer.diskStorage({
       folderName = "banners";
     } else if (url.includes("offer")) { // ✅ Offer folder-o add kore rakhlam
       folderName = "offers";
+    } else if (url.includes("auth") || url.includes("profile") || url.includes("user")) { 
+      // ✅ Profile image-er jonno users folder
+      folderName = "users";
     }
 
     const folderPath = path.join(process.cwd(), "public/uploads", folderName);
