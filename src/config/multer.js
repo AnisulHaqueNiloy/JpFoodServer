@@ -2,32 +2,35 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// Storage Logic
+// --- Storage Logic ---
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let folderName = "others"; // Default folder
-
-    // URL check kore folder name thik kora (Shoro lowercase kore check)
+    let folderName = "others"; 
     const url = req.originalUrl.toLowerCase();
 
+    // File type check (Video naki Image)
+    const isVideo = file.mimetype.startsWith("video/");
+
+    // Folder selection logic
     if (url.includes("subcategory")) {
       folderName = "subcategories";
     } else if (url.includes("product")) {
       folderName = "products";
     } else if (url.includes("categor")) {
       folderName = "categories";
-    } else if (url.includes("banner")) { // ✅ Single 'banner' thaklei hobe
+    } else if (url.includes("banner")) {
       folderName = "banners";
-    } else if (url.includes("offer")) { // ✅ Offer folder-o add kore rakhlam
+    } else if (url.includes("offer")) {
       folderName = "offers";
-    } else if (url.includes("auth") || url.includes("profile") || url.includes("user")) { 
-      // ✅ Profile image-er jonno users folder
+    } else if (url.includes("auth") || url.includes("profile") || url.includes("user")) {
       folderName = "users";
+    } else if (isVideo) {
+      folderName = "videos"; // Default video folder jodi onno kothao match na kore
     }
 
     const folderPath = path.join(process.cwd(), "public/uploads", folderName);
 
-    // Folder na thakle create korbe
+    // Folder na thakle auto create korbe
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath, { recursive: true });
     }
@@ -36,31 +39,40 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    // Original extension shoho save hobe (jfif, mp4 shob support korbe)
     cb(
       null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname).toLowerCase()
     );
   },
 });
 
-// File Filter
+// --- File Filter (Update: JFIF & Videos Added) ---
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|webp/;
-  const extname = allowedTypes.test(
+  // Regex updated with jfif, mp4, webm, mov
+  const allowedExtensions = /jpeg|jpg|png|webp|jfif|mp4|webm|mov|quicktime/;
+  
+  const extname = allowedExtensions.test(
     path.extname(file.originalname).toLowerCase()
   );
-  const mimetype = allowedTypes.test(file.mimetype);
+  
+  // Mimetype check for both images and videos
+  const isImage = file.mimetype.startsWith("image/");
+  const isVideo = file.mimetype.startsWith("video/");
 
-  if (extname && mimetype) {
+  if (extname && (isImage || isVideo)) {
     return cb(null, true);
   } else {
-    cb(new Error("Only images (jpeg, jpg, png, webp) are allowed!"), false);
+    cb(new Error("Only images (jpg, png, webp, jfif) and videos (mp4, webm) are allowed!"), false);
   }
 };
 
+// --- Multer Instance ---
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // Max 10MB
+  limits: { 
+    fileSize: 100 * 1024 * 1024 // Limit bariye 100MB kora hoyeche video-r jonno
+  }, 
   fileFilter: fileFilter,
 });
 
