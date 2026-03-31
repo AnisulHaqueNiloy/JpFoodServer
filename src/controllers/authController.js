@@ -3,7 +3,7 @@ const {
   authenticateUser,
   getUserById,
   logoutUser,
-  updateUserProfile
+  updateUserProfile,
 } = require("../services/authService");
 
 const setTokenCookie = (res, token) => {
@@ -116,10 +116,10 @@ const updateMe = async (req, res, next) => {
       imagePath = `/uploads/users/${req.file.filename}`;
     }
 
-    const updatedData = await updateUserProfile(req.user._id, { 
-      name, 
-      image: imagePath, 
-      password 
+    const updatedData = await updateUserProfile(req.user._id, {
+      name,
+      image: imagePath,
+      password,
     });
 
     res.status(200).json({
@@ -133,4 +133,4 @@ const updateMe = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getMe, logout ,updateMe};
+module.exports = { registerUser, loginUser, getMe, logout, updateMe };
